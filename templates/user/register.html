@@ -1,0 +1,29 @@
+{% extends "partials/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Register page{% endblock title %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-md-6 offset-md-3">
+                {% for message in messages %}
+                    {% if message %}
+                        <div class="alert {% if message.tags == 'error' %} alert-danger
+                        {% elif message.tags == 'success' %} alert-success {% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}   
+                {% endfor %}
+                <div class="border bg-white p-3">
+                    <h3>Registration page</h3>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <input class="btn btn-success" type="submit" value="Register">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
