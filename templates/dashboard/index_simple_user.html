@@ -18,12 +18,13 @@
         </div>
         <div class="col-md-8">
             {% for message in messages %}
-                    {% if message %}
-                        <div class="alert alert-{{ message.tags }} ">
-                            {{ message }}
-                        </div>
-                    {% endif %}   
-                {% endfor %}
+                {% if message %}
+                    <div class="alert {% if message.tags == 'error' %} alert-danger
+                    {% elif message.tags == 'success' %} alert-success {% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}   
+            {% endfor %}
             <div class="card">
                 <div class="card-header">
                     Orders Records
@@ -40,8 +41,7 @@
                         </thead>
                         <tbody>
                             
-                            {% for order in orders %}
-                                
+                            {% for order in all_order %}
                                 {% if order.staff == user %}
                                     <tr>
                                         <td>{{order.product}}</td>
@@ -50,7 +50,6 @@
                                         <td>{{order.date}}</td>
                                     </tr>
                                 {% endif %}
-                               
                             {% endfor %}
                                         
                         </tbody>

@@ -5,6 +5,7 @@ from .models import Product, Order
 from .forms import ProducForm, OrderForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.models import Sum
 # Create your views here.
 
 #Creation d'une fonction utilitaire 
@@ -19,7 +20,8 @@ def get_counts():
 
 @login_required()
 def index(request):
-    orders = Order.objects.all()
+    all_order = Order.objects.all()
+    orders = Order.objects.values('product__name').annotate(total_quantity = Sum('order_quantity'))
     products = Product.objects.all()
 
     if request.method == 'POST':
@@ -27,9 +29,16 @@ def index(request):
         if form_order.is_valid():
             instance = form_order.save(commit=False)
             instance.staff = request.user
-            messages.success(request, 'Orders List has been updated')
-            instance.save()
-            
+
+            #Récuperer le produit concerné par la commande
+            product = instance.product
+            if product.quantity >= instance.order_quantity:
+                product.quantity -= instance.order_quantity
+                product.save()
+                instance.save() # On sauvegarde la commande ok? 
+                messages.success(request, 'Orders List has been updated')
+            else:
+                messages.error(request, 'Not enough stock for this product.')
             return redirect('dashboard-index')
     else:
         form_order = OrderForm()
@@ -37,6 +46,7 @@ def index(request):
         'orders':orders,
         'form_order':form_order,
         'products':products,
+        'all_order': all_order,
         **get_counts()
     }
     return render(request, 'dashboard/index.html', context)

@@ -17,10 +17,10 @@
                                     var myChart1 = new Chart(ctx, {
                                         type: 'pie',
                                         data: {
-                                            labels: [{% for order in orders %} '{{order.product.name}}', {% endfor %}],
+                                            labels: [{% for order in orders %} '{{order.product__name}}', {% endfor %}],
                                     datasets: [{
                                         label: 'Orders',
-                                        data: [{% for order in orders %} '{{order.order_quantity}}', {% endfor %}],
+                                        data: [{% for order in orders %} '{{order.total_quantity}}', {% endfor %}],
                                         backgroundColor: [
                                             'rgb(205, 182, 251)',
                                             'rgba(54, 162, 235, 1)',
