@@ -5,9 +5,10 @@ from .models import Product, Order
 from .forms import ProducForm, OrderForm
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Sum, OuterRef, Subquery
 # Create your views here.
-
+"""Subquery est une classe qui permet d'executer une requete à l'interieur d'une autre requête
+annotate permet d'ajouter un champ(clé) au dictionnaire de queryset que retournera values('liste_des_champs')"""
 #Creation d'une fonction utilitaire 
 
 def get_counts():
@@ -72,15 +73,28 @@ def staff_detail(request, pk):
 #j'ai une fois en profiter pour mettre la logique d'enregistrement dans le fonction qui est sensé retourner l'ensemble des produits
 @login_required()
 def product(request):
-    items = Product.objects.all()
+
+    #Regroupons les produits pas nom, et par categorie pour eviter les doublons
+    items = Product.objects.values('name', 'category').annotate(total_quatity = Sum('quantity'),
+     product_id=Subquery(Product.objects.filter(name=OuterRef('name')).values('id')[:1])                                     
+    )# OuterRef:fait référence à la valeur du champ name de l'objet dans la requête externe
+
     #items = Product.objects.raw('SELECT * FROM dashboard_product')
     if request.method == 'POST':
         product_form = ProducForm(request.POST)
         if product_form.is_valid():
-            product_form.save()
             product_name = product_form.cleaned_data.get('name')
-            messages.success(request, f"{product_name} has beeb added")
+            product_category = product_form.cleaned_data.get('category')
+            existing_product = Product.objects.filter(name__iexact = product_name, category__iexact = product_category).first()
+            if existing_product:
+                existing_product.quantity += product_form.cleaned_data.get('quantity')
+                existing_product.save()
+                messages.success(request, f"{product_name} has been updaded")
+            else:
+                product_form.save()
+                messages.success(request, f"{product_name} has been added")
             return redirect('dashboard-product')
+    
     else :
         product_form = ProducForm()
     context = {

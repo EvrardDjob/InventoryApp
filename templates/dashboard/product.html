@@ -43,10 +43,10 @@
                         <tr>
                             <td>{{ item.name }}</td>
                             <td>{{ item.category }}</td>
-                            <td>{{ item.quantity }} </td>
+                            <td>{{ item.total_quatity }} </td>
                             <td class="pl-4">
-                                <a class="btn btn-info btn-sm" href="{% url 'dashboard-product-update' item.id  %}">Edit</a>
-                                <a class="btn btn-danger btn-sm" href="{% url 'dashboard-product-delete' item.id  %}">Delete</a>
+                                <a class="btn btn-info btn-sm" href="{% url 'dashboard-product-update' item.product_id  %}">Edit</a>
+                                <a class="btn btn-danger btn-sm" href="{% url 'dashboard-product-delete' item.product_id  %}">Delete</a>
                             </td>
                         </tr>
                         {% endfor%}
