@@ -5,3 +5,8 @@ body{
     transform: scale(1.1);
     transition: 0.2s ease-in-out;
 }
+
+.custom-modal-size {
+    max-width: 350px;
+    max-height: 350px;
+}

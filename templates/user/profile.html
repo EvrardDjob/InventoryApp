@@ -5,11 +5,9 @@
 
 {% block content %}
     <div class="container">
-        <div class="row my-4">
-            <div class="col-md-4">
-
-            </div>
-            <div class="col-md-8">
+        <div class="row my-4 justify-content-center">
+            
+            <div class="col-md-8 ">
                 {% for message in messages %}
                 {% if message %}
                     <div class="alert alert-{{ message.tags }} ">
@@ -50,12 +48,31 @@
 
                             </div>
                             <div class="col-md-4">
-                                <img class="img-thumbnail" src="{{user.profil.image.url}}" alt="error">
+                                <img class="img-thumbnail" src="{{user.profil.image.url}}" alt="error" data-bs-toggle="modal" data-bs-target="#imageModal" style="cursor: pointer;">
                             </div>
+
+                            <!-- Modal Bootstrap(pour l'affichage d'un popup pour agrandir l'image) -->
+                            <div class="modal fade custom-modal-size" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true" >
+                                <div class="modal-dialog modal-dialog-centered custom-modal-size">
+                                    
+                                    <div class="modal-content">
+                                        <div class="modal-body p-0">
+                                            <img src="{{ user.profil.image.url }}" class="img-fluid w-100" alt="Profile Picture">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- <div class="col-md-4">
+
+            </div> -->
 
         </div>
 
