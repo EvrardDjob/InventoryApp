@@ -22,7 +22,7 @@ def get_counts():
 @login_required()
 def index(request):
     all_order = Order.objects.all()
-    orders = Order.objects.values('product__name').annotate(total_quantity = Sum('order_quantity'))
+    orders = Order.objects.values('product__name').annotate(total_quantity = Sum('order_quantity')) #récupère la somme des quantité commander par nom des produits depuis la table Order
     products = Product.objects.all()
 
     if request.method == 'POST':
